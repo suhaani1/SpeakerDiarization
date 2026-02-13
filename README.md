@@ -1,59 +1,78 @@
-🎙️ Speaker Diarization using Fine-Tuned PyAnnote Segmentation
-📌 Project Overview
 
-This project implements speaker diarization — answering the question:
+# Speaker Diarization using Fine-Tuned PyAnnote Segmentation
 
-“Who spoke when?”
+## Project Overview
 
-The system is built using PyAnnote Audio, where a speaker segmentation model is fine-tuned on custom audio data, followed by speaker embedding extraction and clustering to identify different speakers in an audio file.
+This project implements **speaker diarization**, answering the fundamental question:
+
+**“Who spoke when?”**
+
+The system is developed using PyAnnote Audio. A speaker segmentation model is fine-tuned on custom audio data, followed by speaker embedding extraction and clustering to identify different speakers within an audio recording.
 
 This project is suitable for:
 
-1. Call analysis
-2. Meeting transcription
-3. Surveillance / forensics
-4. Conversational AI pipelines
-5. Academic research & viva evaluation
+* Call analysis
+* Meeting transcription
+* Surveillance and forensics
+* Conversational AI pipelines
+* Academic research and viva evaluation
 
-🧠 What is Speaker Diarization?
+---
 
-Speaker diarization breaks an audio file into:
-Speech vs non-speech
-Speaker segments
-Speaker labels (Speaker 1, Speaker 2, …)
+## What is Speaker Diarization?
 
-Example output:
+Speaker diarization divides an audio file into:
+
+* Speech vs. non-speech
+* Speaker segments
+* Speaker labels (Speaker 1, Speaker 2, etc.)
+
+**Example output**
+
+```
 00:00–00:12  → Speaker 1
 00:12–00:20  → Speaker 2
 00:20–00:35  → Speaker 1
+```
 
-🏗️ Project Architecture
+---
+
+## Project Architecture
+
+```
 Audio Input
    ↓
-Preprocessing (Mono + 16kHz)
+Preprocessing (Mono + 16 kHz)
    ↓
 Fine-Tuned Segmentation Model (PyAnnote)
    ↓
 Speech Activity Detection
    ↓
-Speaker Embedding Extraction (Speech Brain)
+Speaker Embedding Extraction
    ↓
 Agglomerative Clustering
    ↓
 Final Speaker Diarization Output (RTTM / Timeline)
+```
 
-🔧 Technologies & Libraries Used
+---
 
-Python 3.9+
-PyTorch
-PyAnnote Audio
-Torchaudio
-Scikit-learn
-NumPy
-Matplotlib
-RTTM format for evaluation
+## Technologies and Libraries Used
 
-📁 Project Structure
+* Python 3.9+
+* PyTorch
+* PyAnnote Audio
+* Torchaudio
+* Scikit-learn
+* NumPy
+* Matplotlib
+* RTTM format for evaluation
+
+---
+
+## Project Structure
+
+```
 ├── dataset/
 │   ├── audio/                 # Training & evaluation audio files
 │   ├── rttm/                  # Ground truth RTTM files
@@ -74,89 +93,131 @@ RTTM format for evaluation
 ├── requirements.txt
 ├── .gitignore
 └── README.md
+```
 
-🎯 Key Features
+---
 
-✅ Fine-tuned speaker segmentation model
-✅ Works on real-world conversational audio
-✅ Supports variable number of speakers
-✅ Uses Agglomerative Clustering
-✅ Produces RTTM diarization output
-✅ Visualization of speaker segments
+## Key Features
 
-🔊 Audio Requirements (Important)
+* Fine-tuned speaker segmentation model
+* Works on real-world conversational audio
+* Supports a variable number of speakers
+* Uses Agglomerative Clustering
+* Produces RTTM diarization output
+* Visualization of speaker segments
+
+---
+
+## Audio Requirements (Important)
+
 All audio must be:
-Mono (1 channel)
-16 kHz sampling rate
-WAV format
 
-📌 Why?
-PyAnnote models are trained on mono 16kHz
-Stereo or different sampling rates reduce accuracy
+* Mono (single channel)
+* 16 kHz sampling rate
+* WAV format
 
-🚀 How to Run the Project
+**Reason:**
+PyAnnote models are trained on mono 16 kHz audio. Different formats or stereo input may reduce accuracy.
 
-1️⃣ Create Virtual Environment
+---
+
+## How to Run the Project
+
+### 1. Create Virtual Environment
+
+```bash
 python -m venv venv
 venv\Scripts\activate   # Windows
+```
 
-2️⃣ Install Dependencies
+### 2. Install Dependencies
+
+```bash
 pip install -r requirements.txt
+```
 
-3️⃣ Prepare Dataset
-Place audio files in dataset/audio/
-Place RTTM files in dataset/rttm/
-Configure paths in dataset/database.yml
+### 3. Prepare Dataset
 
-4️⃣ Fine-Tune Segmentation Model
+* Place audio files in `dataset/audio/`
+* Place RTTM files in `dataset/rttm/`
+* Configure paths in `dataset/database.yml`
+
+### 4. Fine-Tune Segmentation Model
+
+```bash
 python scripts/train_segmentation.py
+```
 
-5️⃣ Run Speaker Diarization
+### 5. Run Speaker Diarization
+
+```bash
 python scripts/diarization.py --audio sample.wav
+```
 
-6️⃣ Visualize Output
+### 6. Visualize Output
+
+```bash
 python scripts/visualize.py
+```
 
-📊 Output Formats
-RTTM file for evaluation
-Speaker timeline plots
-Segment-level speaker annotations
+---
 
-📈 Evaluation Metrics
-Diarization Error Rate (DER)
-False Alarm
-Missed Speech
-Speaker Confusion
+## Output Formats
 
-🧪 Model Details
-Base Model: PyAnnote Speaker Segmentation
-Training: Supervised fine-tuning
-Loss Function: Binary cross-entropy (segmentation)
-Clustering: Agglomerative Hierarchical Clustering
-Embeddings: Speaker embeddings from PyAnnote pipeline
+* RTTM files for evaluation
+* Speaker timeline plots
+* Segment-level speaker annotations
 
-⚠️ Limitations
-Overlapping speech is challenging
-Performance depends on audio quality
-Needs sufficient labeled RTTM data
+---
 
-🌱 Future Improvements
-🔹 Overlap-aware diarization
-🔹 Domain-specific embedding fine-tuning
-🔹 Real-time diarization
-🔹 Integration with ASR (speech-to-text)
+## Evaluation Metrics
 
-👩‍💻 Author
-Anamika Pandey
-BCA | AI/ML | Speaker Diarization | PyAnnote
+* Diarization Error Rate (DER)
+* False Alarm
+* Missed Speech
+* Speaker Confusion
 
-📜 License
-This project is for academic and learning purposes.
+---
+
+## Model Details
+
+* Base Model: PyAnnote speaker segmentation
+* Training: Supervised fine-tuning
+* Loss Function: Binary cross-entropy (segmentation)
+* Clustering: Agglomerative hierarchical clustering
+* Embeddings: Speaker representations extracted from the PyAnnote pipeline
+
+---
+
+## Limitations
+
+* Overlapping speech remains challenging
+* Performance depends on audio quality
+* Requires sufficient labeled RTTM data
+
+---
+
+## Future Improvements
+
+* Overlap-aware diarization
+* Domain-specific embedding fine-tuning
+* Real-time diarization
+* Integration with ASR (speech-to-text)
+
+---
+
+
+## License
+
+This project is intended for academic and learning purposes.
 Pre-trained models belong to their respective authors.
 
-🙌 Acknowledgements
-PyAnnote Audio Team
+---
 
-HuggingFace
+## Acknowledgements
 
-PyTorch Community
+* PyAnnote Audio Team
+* HuggingFace
+* PyTorch Community
+
+
