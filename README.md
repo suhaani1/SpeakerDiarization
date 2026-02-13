@@ -1,223 +1,187 @@
 
-# Speaker Diarization using Fine-Tuned PyAnnote Segmentation
+# Speaker Diarization with Fine-Tuned PyAnnote
 
-## Project Overview
+## Introduction
 
-This project implements **speaker diarization**, answering the fundamental question:
+Speaker diarization is the process of determining **who speaks at what time** in an audio recording.
+This project builds a complete diarization pipeline by fine-tuning a PyAnnote segmentation model and combining it with speaker embeddings and clustering algorithms.
 
-**“Who spoke when?”**
-
-The system is developed using PyAnnote Audio. A speaker segmentation model is fine-tuned on custom audio data, followed by speaker embedding extraction and clustering to identify different speakers within an audio recording.
-
-This project is suitable for:
-
-* Call analysis
-* Meeting transcription
-* Surveillance and forensics
-* Conversational AI pipelines
-* Academic research and viva evaluation
+The system is designed for research, experimentation, and academic demonstrations, while remaining practical for real conversational data.
 
 ---
 
-## What is Speaker Diarization?
+## Problem Statement
 
-Speaker diarization divides an audio file into:
+Given an input audio file containing multiple speakers, the system must:
 
-* Speech vs. non-speech
-* Speaker segments
-* Speaker labels (Speaker 1, Speaker 2, etc.)
-
-**Example output**
-
-```
-00:00–00:12  → Speaker 1
-00:12–00:20  → Speaker 2
-00:20–00:35  → Speaker 1
-```
+* Detect where speech occurs
+* Split the audio into homogeneous speaker regions
+* Assign consistent speaker IDs across the timeline
 
 ---
 
-## Project Architecture
+## Where This Can Be Used
 
-```
-Audio Input
-   ↓
-Preprocessing (Mono + 16 kHz)
-   ↓
-Fine-Tuned Segmentation Model (PyAnnote)
-   ↓
-Speech Activity Detection
-   ↓
-Speaker Embedding Extraction
-   ↓
-Agglomerative Clustering
-   ↓
-Final Speaker Diarization Output (RTTM / Timeline)
-```
+* Contact center and call monitoring
+* Meeting analytics
+* Forensic audio investigation
+* Pre-processing for speech-to-text systems
+* AI research projects and university evaluations
 
 ---
 
-## Technologies and Libraries Used
+## Pipeline Overview
 
-* Python 3.9+
+The diarization workflow follows a modular architecture:
+
+```
+Audio → Preprocess → Segmentation → Speech Regions
+      → Embeddings → Clustering → Speaker Labels
+```
+
+### Step Description
+
+1. **Preprocessing** – converts audio into mono, 16 kHz WAV.
+2. **Segmentation** – neural model predicts speech boundaries.
+3. **Embedding Extraction** – transforms speech chunks into speaker vectors.
+4. **Clustering** – groups similar voices together.
+5. **Output Generation** – produces RTTM files and timelines.
+
+---
+
+## Technical Stack
+
+* Python
 * PyTorch
 * PyAnnote Audio
 * Torchaudio
 * Scikit-learn
 * NumPy
 * Matplotlib
-* RTTM format for evaluation
 
 ---
 
-## Project Structure
+## Repository Layout
 
 ```
-├── dataset/
-│   ├── audio/                 # Training & evaluation audio files
-│   ├── rttm/                  # Ground truth RTTM files
-│   └── database.yml           # PyAnnote database configuration
-│
-├── models/
-│   └── segmentation/          # Fine-tuned segmentation checkpoints
-│
-├── scripts/
-│   ├── train_segmentation.py  # Model fine-tuning script
-│   ├── diarization.py         # Inference + clustering
-│   └── visualize.py           # Diarization visualization
-│
-├── outputs/
-│   ├── rttm/                  # Predicted RTTM files
-│   └── plots/                 # Speaker timeline plots
-│
-├── requirements.txt
-├── .gitignore
-└── README.md
+dataset/        → audio, annotations, database config
+models/         → trained checkpoints
+scripts/        → training & inference programs
+outputs/        → predictions and visualizations
 ```
 
 ---
 
-## Key Features
+## Capabilities
 
-* Fine-tuned speaker segmentation model
-* Works on real-world conversational audio
-* Supports a variable number of speakers
-* Uses Agglomerative Clustering
-* Produces RTTM diarization output
-* Visualization of speaker segments
-
----
-
-## Audio Requirements (Important)
-
-All audio must be:
-
-* Mono (single channel)
-* 16 kHz sampling rate
-* WAV format
-
-**Reason:**
-PyAnnote models are trained on mono 16 kHz audio. Different formats or stereo input may reduce accuracy.
+* Custom fine-tuning on labeled RTTM datasets
+* Automatic handling of unknown number of speakers
+* Works on long conversations
+* Standard evaluation compatible with diarization benchmarks
+* Visual inspection of speaker turns
 
 ---
 
-## How to Run the Project
+## Input Audio Specification
 
-### 1. Create Virtual Environment
+For reliable results, audio must follow:
 
-```bash
-python -m venv venv
-venv\Scripts\activate   # Windows
-```
+* **Single channel (mono)**
+* **16,000 Hz sampling rate**
+* **WAV format**
 
-### 2. Install Dependencies
+This matches the training conditions of most PyAnnote models.
 
-```bash
-pip install -r requirements.txt
-```
+---
 
-### 3. Prepare Dataset
+---
 
-* Place audio files in `dataset/audio/`
-* Place RTTM files in `dataset/rttm/`
-* Configure paths in `dataset/database.yml`
-
-### 4. Fine-Tune Segmentation Model
+## Training the Segmentation Model
 
 ```bash
 python scripts/train_segmentation.py
 ```
 
-### 5. Run Speaker Diarization
+The script uses dataset definitions from `database.yml` and stores checkpoints in the `models/` directory.
+
+---
+
+## Running Inference
 
 ```bash
-python scripts/diarization.py --audio sample.wav
+python scripts/diarization.py --audio path/to/audio.wav
 ```
 
-### 6. Visualize Output
+Predictions will be written to the `outputs/` folder.
+
+---
+
+## Visualization
 
 ```bash
 python scripts/visualize.py
 ```
 
----
-
-## Output Formats
-
-* RTTM files for evaluation
-* Speaker timeline plots
-* Segment-level speaker annotations
+Generates speaker timelines for qualitative analysis.
 
 ---
 
-## Evaluation Metrics
+## Generated Results
 
-* Diarization Error Rate (DER)
-* False Alarm
-* Missed Speech
-* Speaker Confusion
+The system produces:
 
----
-
-## Model Details
-
-* Base Model: PyAnnote speaker segmentation
-* Training: Supervised fine-tuning
-* Loss Function: Binary cross-entropy (segmentation)
-* Clustering: Agglomerative hierarchical clustering
-* Embeddings: Speaker representations extracted from the PyAnnote pipeline
+* RTTM diarization files
+* Time-aligned speaker segments
+* Graphical plots of speaker activity
 
 ---
 
-## Limitations
+## Performance Measurement
 
-* Overlapping speech remains challenging
-* Performance depends on audio quality
-* Requires sufficient labeled RTTM data
+Evaluation is typically done using:
 
----
-
-## Future Improvements
-
-* Overlap-aware diarization
-* Domain-specific embedding fine-tuning
-* Real-time diarization
-* Integration with ASR (speech-to-text)
+* Diarization Error Rate
+* Missed speech
+* False alarms
+* Speaker confusion
 
 ---
 
+## Design Choices
 
-## License
-
-This project is intended for academic and learning purposes.
-Pre-trained models belong to their respective authors.
+* Neural segmentation improves robustness over rule-based VAD.
+* Embedding-based clustering allows flexible speaker counts.
+* Hierarchical clustering provides interpretable grouping.
 
 ---
 
-## Acknowledgements
+## Current Challenges
 
-* PyAnnote Audio Team
-* HuggingFace
-* PyTorch Community
+* Heavy overlap between speakers
+* Background noise or reverberation
+* Limited labeled data for adaptation
+
+---
+
+## Possible Extensions
+
+* End-to-end neural diarization
+* Online / streaming prediction
+* Joint diarization + ASR
+* Improved overlap modeling
+
+---
+
+## License Notice
+
+Developed for academic and educational usage.
+All third-party models remain property of their respective creators.
+
+---
+
+## Credits
+
+Thanks to the open-source communities behind PyAnnote, PyTorch, and related research tools that make experimentation possible.
+
 
 
